@@ -85,6 +85,7 @@ const formatTime = (seconds: number) => {
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 };
 
+// FIX: Reverted to process.env.API_KEY to align with Gemini API guidelines and fix TypeScript error.
 const API_KEY = process.env.API_KEY;
 
 interface PracticeScreenProps {
@@ -315,6 +316,7 @@ const PracticeScreen: React.FC<PracticeScreenProps> = ({ onPracticeComplete, use
   const handleStartSession = useCallback(async () => {
     if (!API_KEY) {
         setStatus('error');
+        // FIX: Updated alert message to be generic, not Vite-specific.
         alert("API Key not found. Please configure your environment variables.");
         return;
     }

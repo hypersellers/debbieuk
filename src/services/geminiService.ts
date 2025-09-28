@@ -4,7 +4,8 @@ import { GoogleGenAI } from "@google/genai";
 import { ASSESSMENT_PROMPT, COPILOT_PROMPT } from '../constants';
 
 // In a real application, the API key would be handled more securely and not exposed on the client-side.
-// We assume process.env.API_KEY is populated by the build environment.
+// FIX: Reverted to process.env.API_KEY to align with Gemini API guidelines and fix TypeScript error.
+// We assume this is populated by the build environment.
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
