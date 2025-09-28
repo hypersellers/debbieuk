@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import { generateAssessment } from '../../services/geminiService';
 import { getUserProfile, saveAssessment } from '../../services/userProfileService';
 import { saveTranscriptToCloud } from '../../services/cloudStorageService';
