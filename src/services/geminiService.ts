@@ -1,15 +1,12 @@
-
-
 import { GoogleGenAI } from "@google/genai";
 import { ASSESSMENT_PROMPT, COPILOT_PROMPT } from '../constants';
 
 // In a real application, the API key would be handled more securely and not exposed on the client-side.
-// FIX: Reverted to process.env.API_KEY to align with Gemini API guidelines and fix TypeScript error.
-// We assume this is populated by the build environment.
-const API_KEY = process.env.API_KEY;
+// We use import.meta.env.VITE_API_KEY for Vite compatibility during local development.
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 if (!API_KEY) {
-  console.error("API_KEY is not set. Please set the API_KEY environment variable.");
+  console.error("VITE_API_KEY is not set. Please set it in your .env.local file.");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY! });
@@ -57,7 +54,7 @@ export const generateCopilotSuggestion = async (transcript: string): Promise<str
     });
     
     return response.text;
-  } catch (error) {
+  } catch (error)_ {
     console.error("Error generating copilot suggestion:", error);
     return "Couldn't generate a tip. Keep going!";
   }
