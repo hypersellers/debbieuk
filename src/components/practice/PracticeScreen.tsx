@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GoogleGenAI, Type } from '@google/genai';
-import { TranscriptMessage } from '../../types';
+import { TranscriptMessage } from '../../types'; // If error persists, try '../../../types' or use absolute import
 import { SYSTEM_PROMPT, PERSONA_PROFILES } from '../../constants';
 import { generateCopilotSuggestion } from '../../services/geminiService';
 import { getUserProfile } from '../../services/userProfileService';
@@ -85,8 +85,17 @@ const formatTime = (seconds: number) => {
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 };
 
-// FIX: Use process.env.API_KEY as per coding guidelines.
-const API_KEY = process.env.API_KEY;
+// FIX: Use Vite's import.meta.env.VITE_API_KEY for environment variable access.
+// Add a type declaration for import.meta.env if missing
+declare global {
+  interface ImportMeta {
+    env: {
+      VITE_API_KEY: string;
+      [key: string]: any;
+    };
+  }
+}
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 interface PracticeScreenProps {
   onPracticeComplete: (transcript: string) => void;
@@ -237,7 +246,7 @@ const PracticeScreen: React.FC<PracticeScreenProps> = ({ onPracticeComplete, use
             },
         });
 
-        const jsonResponse = JSON.parse(response.text);
+  const jsonResponse = response.text ? JSON.parse(response.text) : {};
         const { userTranscription, debbieResponse, debbieTone } = jsonResponse;
 
         if (!userTranscription || !debbieResponse) {
