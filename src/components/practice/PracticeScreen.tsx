@@ -175,6 +175,8 @@ const PracticeScreen: React.FC<PracticeScreenProps> = ({ onPracticeComplete, use
     setIsCopilotLoading(false);
   }, []);
 
+
+  // Timer effect
   useEffect(() => {
     if (sessionStarted && timeLeft > 0) {
       const intervalId = setInterval(() => {
@@ -183,6 +185,13 @@ const PracticeScreen: React.FC<PracticeScreenProps> = ({ onPracticeComplete, use
       return () => clearInterval(intervalId);
     }
   }, [sessionStarted, timeLeft]);
+
+  // Generate Mentor's Tip at session start and after every transcript update
+  useEffect(() => {
+    if (sessionStarted) {
+      fetchCopilotSuggestion(transcript);
+    }
+  }, [transcript, sessionStarted, fetchCopilotSuggestion]);
   
   const processAndSendAudio = useCallback(async () => {
     if (audioChunksRef.current.length === 0) {
@@ -372,8 +381,8 @@ const PracticeScreen: React.FC<PracticeScreenProps> = ({ onPracticeComplete, use
     return (
         <div className="text-center w-full max-w-lg bg-slate-900/40 backdrop-blur-xl shadow-2xl rounded-3xl p-8 border border-cyan-400/20 animate-fade-in">
              <Logo className="h-24 w-24 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-2">Welcome to your AI Sales Mentor</h2>
-            <p className="text-cyan-200/80 mb-8">Hone your pitch and close more deals. Let's get started.</p>
+            <h2 className="text-3xl font-bold text-white mb-2">Welcome to your AI Sales Practice</h2>
+            <p className="text-cyan-200/80 mb-8">Improve your pitch and close more deals. Let's get started.</p>
             
             <div className="mb-8 text-left">
                 <label className="block text-sm font-medium text-cyan-200/80 mb-2">Select Difficulty</label>

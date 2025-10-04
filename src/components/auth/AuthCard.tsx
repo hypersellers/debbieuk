@@ -12,7 +12,7 @@ const AuthCard: React.FC<AuthCardProps> = ({ title, children }) => {
       <div className="text-center mb-8">
         <Logo className="h-20 w-20 mx-auto mb-4" />
         <h2 className="text-3xl font-bold text-white">{title}</h2>
-        <p className="text-cyan-200/80 mt-1">Welcome to Hypersellers.ai</p>
+        <p className="text-cyan-200/80 mt-1">Welcome to hypersellers.ai sales practice</p>
       </div>
       {children}
     </div>

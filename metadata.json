@@ -1,5 +1,5 @@
 {
-  "name": "Hyperseller AI Sales Mentor",
+  "name": "hyperseller AI Sales Practice",
   "description": "A web application for students to practice a sales pitch and receive feedback from an AI mentor. This voice-only interface allows students to interact with an AI to improve their sales skills.",
   "requestFramePermissions": [
     "microphone"
