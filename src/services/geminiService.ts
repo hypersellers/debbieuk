@@ -11,17 +11,38 @@ declare global {
     };
   }
 }
+
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 if (!API_KEY) {
-  console.error("VITE_API_KEY is not set. Please set the VITE_API_KEY environment variable.");
+  console.warn("VITE_API_KEY is not set. AI features will be unavailable until it is configured.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+let aiClient: GoogleGenAI | null = null;
+
+const ensureClient = (): GoogleGenAI | null => {
+  if (!API_KEY) {
+    return null;
+  }
+
+  if (aiClient) {
+    return aiClient;
+  }
+
+  try {
+    aiClient = new GoogleGenAI({ apiKey: API_KEY });
+    return aiClient;
+  } catch (error) {
+    console.error("Failed to initialise GoogleGenAI client:", error);
+    aiClient = null;
+    return null;
+  }
+};
 
 export const generateAssessment = async (transcript: string, userHistory: string): Promise<string> => {
-  if (!API_KEY) {
-    return "Error: API_KEY is not configured. Please contact support.";
+  const client = ensureClient();
+  if (!client) {
+    return "Error: AI services are not configured. Please contact support.";
   }
   
   try {
@@ -29,12 +50,12 @@ export const generateAssessment = async (transcript: string, userHistory: string
       .replace('{{TRANSCRIPT}}', transcript)
       .replace('{{USER_HISTORY}}', userHistory);
     
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
     });
     
-  return response.text ?? "No response from Gemini API.";
+    return response.text ?? "No response from Gemini API.";
   } catch (error) {
     console.error("Error generating assessment:", error);
     return "An error occurred while generating your assessment. Please try again later.";
@@ -42,7 +63,8 @@ export const generateAssessment = async (transcript: string, userHistory: string
 };
 
 export const generateCopilotSuggestion = async (transcript: string): Promise<string> => {
-  if (!API_KEY) {
+  const client = ensureClient();
+  if (!client) {
     return "Copilot unavailable.";
   }
   
@@ -52,7 +74,7 @@ export const generateCopilotSuggestion = async (transcript: string): Promise<str
     }
     const prompt = COPILOT_PROMPT.replace('{{TRANSCRIPT}}', transcript);
     
-    const response = await ai.models.generateContent({
+    const response = await client.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
         config: {
@@ -61,8 +83,7 @@ export const generateCopilotSuggestion = async (transcript: string): Promise<str
         }
     });
     
-  return response.text ?? "No response from Gemini API.";
-    // FIX: Corrected a typo in the catch block from `catch (error)_` to `catch (error)`.
+    return response.text ?? "No response from Gemini API.";
   } catch (error) {
     console.error("Error generating copilot suggestion:", error);
     return "Couldn't generate a tip. Keep going!";
