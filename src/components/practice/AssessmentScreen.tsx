@@ -56,7 +56,7 @@ const AssessmentScreen: React.FC<AssessmentScreenProps> = ({ transcript, onStart
     // Add a title
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(18);
-    doc.text('Hypersellers.ai Sales Mentor Assessment', 105, 20, { align: 'center' });
+    doc.text('hypersellers.ai Sales Practice', 105, 20, { align: 'center' });
     
     // Add user info and date
     doc.setFont('helvetica', 'normal');
